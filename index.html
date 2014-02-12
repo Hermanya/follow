@@ -1,0 +1,40 @@
+<!doctype html>
+<html ng-app="app">
+  <head>
+    <title>Follow Social Networks</title>
+    <link rel="stylesheet" type="text/css" href="style/style.css">
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="main.js"></script>
+    <script src="instagramService.js"></script>
+    <script src="youtubeService.js"></script>
+  
+  </head>
+  <body ng-controller="mainController">
+  	<section id="timeline">
+  		<div ng-repeat="post in content" >
+        <!-- Instagram -->
+        <img ng-show="{{post.isInstagram}}" ng-src="{{post.instagram_imageURL}}">
+        <label ng-show="{{post.isInstagram}}">{{post.instagram_caption.text}}</label>
+        <!-- YouTube -->
+        <h4 ng-show="{{post.isYoutube}}" >{{post.youtube_title}}</h4>
+        <iframe ng-show="{{post.isYoutube}}" width="520" height="280" ng-src="{{trustSrc(post.youtube_videoURL)}}" frameborder="0" allowfullscreen></iframe>
+      </div>
+  	</section>
+    <section id="people">
+      <div ng-repeat="person in following track by $index">
+        {{person.name}}
+        <i ng-click="select($index,'instagram')" ng-show="{{person.instagram!=null}}">instagram</i>
+        <i ng-click="select($index,'youtube')" ng-show="{{person.youtube!=null}}">youtube</i>
+      </div>
+    </section>
+    <section id="newPerson">
+      <div>
+         <label for="inputName" class="control-label">New person to follow:</label>
+        <input type="text" ng-model="newFollowingName"  id="inputName" placeholder="Name" />
+        <input type="text" ng-model="newFollowingInstagram" placeholder="instagram.com/"/>
+        <input type="text" ng-model="newFollowingYoutube" placeholder="youtube.com/"/>
+        <button ng-click="addThisPerson()" type="button" >Follow</button>
+      </div>
+    </section>
+  </body>
+</html>

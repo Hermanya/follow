@@ -13,7 +13,7 @@
   
   </head>
   <body ng-controller="mainController">
-    <header>Do not sign up — just follow</header>
+    <header id="header">Do not sign up — just follow</header>
   	<section id="timeline">
   		<div ng-repeat="post in content" >
         <!-- Instagram -->
@@ -26,6 +26,7 @@
         <img ng-if="post.vk_attachment.type=='photo'" ng-src="{{post.vk_attachment.photo.src_big}}">
         <label ng-if="post.vk_text" ng-bind-html="toTrusted(post.vk_text)"></label>
       </div>
+      <button id="load-more" ng-click="loadMore()">Load more</button>
   	</section>
     <section id="people">
       <h4>You are following:</h4>
@@ -46,5 +47,6 @@
         <button ng-click="considerThisPerson()" type="button" >Follow</button>
       </div>
     </section>
+    <a href="#header" id="up-link">up</a>
   </body>
 </html>

@@ -19,14 +19,19 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
 	}
 	$scope.following = JSON.parse(window.localStorage.getItem("following"));
 	$scope.content = [];
-	$scope.select = function(followingNumber,socialNetwork){
-		$scope.content = [];
+	$scope.select = function(followingNumber,socialNetwork,offset){
+		$scope.currentPersonNumber = followingNumber;
+		$scope.currentSocialNetwork = socialNetwork;
+		if (offset === undefined){
+			$scope.content = [];
+			offset = 0;
+		}
 		switch(socialNetwork){
 			case "instagram":
-				instagramService.getData($scope.following[followingNumber].instagram,1)
+				instagramService.getData($scope.following[followingNumber].instagram,offset+1,$scope.instagram_maxId)
 				.success(function(data, status) {
 			    console.log(data);
-
+			    $scope.instagram_maxId = data.pagination.next_max_id;
 			    for (var i = 0; i < data.data.length; i++) {
 			    	$scope.content.push({
 			    		isInstagram: true,
@@ -41,7 +46,7 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
 			  });
 				break;
 			case "youtube":
-				youtubeService.getData($scope.following[followingNumber].youtube,1)
+				youtubeService.getData($scope.following[followingNumber].youtube,offset+1)
 				.success(function(data, status) {
 
 			    for (var i = 0; i < data.feed.entry.length; i++) {
@@ -60,7 +65,7 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
 			  });
 				break;
 				case "vk":
-				vkService.getData($scope.following[followingNumber].vk,0)
+				vkService.getData($scope.following[followingNumber].vk,offset)
 				.success(function(data, status) {
 					console.log(data);
 
@@ -133,7 +138,9 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
     	$scope.newFollowingVk = undefined;
   	}
   }
-
+  $scope.loadMore = function(){
+  	$scope.select($scope.currentPersonNumber,$scope.currentSocialNetwork,$scope.content.length);
+  }
   $scope.select(0,"vk");
 }]);
 

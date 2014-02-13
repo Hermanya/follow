@@ -47,6 +47,7 @@ html{
 			cursor:default;
 			color:$default-color;
 			text-shadow: 0px 2px 1px #bbb;
+			z-index:2;
 		}
 		#people{
 			@include section(290px);
@@ -85,6 +86,20 @@ html{
 					margin-top: 1em;
 				}
 			}
+			#load-more{
+				width:100%;
+			}
+		}
+		#up-link{
+			position:fixed;
+			top:0;
+			bottom:0;
+			left:0;
+			padding:1em;
+			color:$font-color;
+		}
+		#up-link:hover{
+			background-color:rgba(255,255,255,0.5);
 		}
 	}
 }

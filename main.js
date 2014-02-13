@@ -11,7 +11,11 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
 			youtube:"hermanstarikov",
 			vk:"20796153"
 		};
-		window.localStorage.setItem("following",JSON.stringify([me]));
+		var kevin = {
+			name:"Kevin Spacey",
+			vk:"198977223"
+		};
+		window.localStorage.setItem("following",JSON.stringify([kevin,me]));
 	}
 	$scope.following = JSON.parse(window.localStorage.getItem("following"));
 	$scope.content = [];
@@ -86,10 +90,10 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
   }
   $scope.considerThisPerson = function(){
     var person = {
-    	name:$scope.newFollowingName,
-    	instagram:$scope.newFollowingInstagram,
-    	youtube:$scope.newFollowingYoutube,
-    	vk:$scope.newFollowingVk
+    	name:$scope.newFollowingName?$scope.newFollowingName:"John",
+    	instagram:$scope.newFollowingInstagram?$scope.newFollowingInstagram.split("/").last():undefined,
+    	youtube:$scope.newFollowingYoutube?$scope.newFollowingYoutube.split("/").last():undefined,
+    	vk:$scope.newFollowingVk?$scope.newFollowingVk.split("/").last():undefined
     };
     if (person.instagram !== undefined)
 	  	instagramService.getId(person.instagram)

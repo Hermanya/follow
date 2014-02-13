@@ -1,11 +1,17 @@
 var app = angular.module("app",[]);
 
 
-app.controller("mainController",["$scope","$http","$sce","instagramService","youtubeService",
-	function($scope,$http,$sce,instagramService,youtubeService){
+app.controller("mainController",["$scope","$http","$sce","instagramService","youtubeService","vkService",
+	function($scope,$http,$sce,instagramService,youtubeService,vkService){
 
 	if (window.localStorage.following==undefined){
-		window.localStorage.setItem("following",'[{"name":"Herman","instagram":"23424306","youtube":"hermanstarikov"}]');
+		var me = {
+			name:"Herman",
+			instagram:"23424306",
+			youtube:"hermanstarikov",
+			vk:"20796153"
+		};
+		window.localStorage.setItem("following",JSON.stringify([me]));
 	}
 	$scope.following = JSON.parse(window.localStorage.getItem("following"));
 	$scope.content = [];
@@ -46,41 +52,87 @@ app.controller("mainController",["$scope","$http","$sce","instagramService","you
 
 			  }).error(function(data, status) {
 			    // Some error occurred
-			   alert(JSON.stringify(data));
+			   alert(status);
+			  });
+				break;
+				case "vk":
+				vkService.getData($scope.following[followingNumber].vk,0)
+				.success(function(data, status) {
+					console.log(data);
+
+			    for (var i = 1; i < data.response.length; i++) {
+
+			    	$scope.content.push({
+			    		isVk: true,
+			    		vk_text:data.response[i].text,
+			    		vk_attachment:data.response[i].attachment
+			    	});
+			    };
+
+			  }).error(function(data, status) {
+			    // Some error occurred
+			   alert(status);
 			  });
 				break;
 			default:
 			  	alert("unknown socialNetwork");
 		}
 	}
-  $scope.toTrusted = function(html_code)
-    {
+  $scope.toTrusted = function(html_code){
     return $sce.trustAsHtml(html_code);
-    }
-    $scope.trustSrc = function(src) {
+  }
+  $scope.trustSrc = function(src) {
     return $sce.trustAsResourceUrl(src);
-  	}
-  $scope.addThisPerson = function(){
-    	var person = {
-    		name:$scope.newFollowingName,
-    		instagram:$scope.newFollowingInstagram,
-    		youtube:$scope.newFollowingYoutube
-    	};
-    	$scope.following.push(person);
-    	window.localStorage.setItem("following",JSON.stringify($scope.following));
+  }
+  $scope.considerThisPerson = function(){
+    var person = {
+    	name:$scope.newFollowingName,
+    	instagram:$scope.newFollowingInstagram,
+    	youtube:$scope.newFollowingYoutube,
+    	vk:$scope.newFollowingVk
+    };
+    if (person.instagram !== undefined)
+	  	instagramService.getId(person.instagram)
+	  	.success(function(data, status) {
+	  		if (data.data[0].id)
+	  			person.instagram = data.data[0].id;
+	  		else
+	  			person.instagram = undefined;
+	  		$scope.addThisPerson(person);
+	  	}).error(function(data, status) {
+	  		person.instagram = undefined;
+	  		$scope.addThisPerson(person);
+	  	});
 
-    }
-    $scope.select(0,"instagram");
+	  if (person.vk !== undefined)
+	  	vkService.getId(person.vk)
+	  	.success(function(data, status) {
+	  		if (data.response[0].uid)
+	  			person.vk = data.response[0].uid;
+	  		else
+	  			person.vk = undefined;
+	  		$scope.addThisPerson(person);
+	  	}).error(function(data, status) {
+	  		person.vk = undefined;
+	  		$scope.addThisPerson(person);
+	  	});
+	  $scope.addThisPerson(person);
+  }
+  $scope.addThisPerson = function(person){
+  	if ((person.instagram == undefined || parseInt(person.instagram))&&
+  		(person.vk == undefined || parseInt(person.vk))){
+	    $scope.following.push(person);
+	    window.localStorage.setItem("following",JSON.stringify($scope.following));
+	    $scope.newFollowingName = undefined;
+    	$scope.newFollowingInstagram = undefined;
+    	$scope.newFollowingYoutube = undefined;
+    	$scope.newFollowingVk = undefined;
+  	}
+  }
+
+  $scope.select(0,"vk");
 }]);
 
-
-/*
- vk 1 https://api.vk.com/method/getProfiles?uids= id
- vk 2 https://api.vk.com/method/wall.get?ownenpm install grunt --save-devr_id= id &count=10&offset= alreadey
-
-https://api.instagram.com/v1/users/search?q= id &access_token=23424306.f59def8.7db6e07bc5824301a0bd3d6a18838ced
- https://api.instagram.com/v1/users/".$_GET["id"]."/media/recent/?access_token=23424306.f59def8.7db6e07bc5824301a0bd3d6a18838ced&count=10
- */
  if (!Array.prototype.last){
     Array.prototype.last = function(){
         return this[this.length - 1];

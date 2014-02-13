@@ -3,13 +3,34 @@ html {
   font-size: 14px;
   color: #333333;
   line-height: 18px;
-  background-color: #D8EAEA;
+  background-color: #d8eaea;
   background-image: url("http://colourlovers.com.s3.amazonaws.com/images/patterns/2596/2596465.png"); }
   html body {
     background: none;
     width: 890px;
     padding: 56px 23px 15px;
-    margin: 0 auto; }
+    margin: 0 auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
+    html body header {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 46px;
+      font-family: Lobster;
+      background-color: white;
+      text-align: center;
+      font-size: 38px;
+      line-height: 36px;
+      border-bottom: 2px solid rgba(0, 0, 0, 0.15);
+      cursor: default;
+      color: #d8eaea;
+      text-shadow: 0px 2px 1px #bbb; }
     html body #people {
       background-color: white;
       width: 290px;
@@ -35,11 +56,6 @@ html {
       background-clip: padding-box;
       border: 1px solid #e1e8ed;
       padding: 15px; }
-      html body #newPerson label {
-        display: inline-block;
-        margin-bottom: 5px;
-        font-weight: bold;
-        color: #aaa; }
       html body #newPerson button {
         width: 100%; }
     html body #timeline {
@@ -56,7 +72,7 @@ html {
       padding: 0; }
       html body #timeline div {
         position: relative;
-        padding: 9px 12px;
+        padding: 1em;
         border-bottom: 1px solid #e1e8ed; }
         html body #timeline div img {
           width: 100%;
@@ -65,7 +81,8 @@ html {
           width: 100%;
           white-space: pre-wrap;
           word-wrap: break-word;
-          display: block;
+          display: block; }
+        html body #timeline div img + label, html body #timeline div iframe + label {
           margin-top: 1em; }
 
 i {
@@ -130,3 +147,12 @@ input {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
+
+h4 {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #aaa;
+  line-height: 1em; }

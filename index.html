@@ -2,38 +2,48 @@
 <html ng-app="app">
   <head>
     <title>Follow Social Networks</title>
+    <meta charset="utf-8">
+    <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="style/style.css">
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="main.js"></script>
-    <script src="instagramService.js"></script>
-    <script src="youtubeService.js"></script>
+    <script src="services/instagramService.js"></script>
+    <script src="services/youtubeService.js"></script>
+    <script src="services/vkService.js"></script>
   
   </head>
   <body ng-controller="mainController">
+    <header>Do not sign up — just follow</header>
   	<section id="timeline">
   		<div ng-repeat="post in content" >
         <!-- Instagram -->
-        <img ng-show="{{post.isInstagram}}" ng-src="{{post.instagram_imageURL}}">
-        <label ng-show="{{post.isInstagram}}">{{post.instagram_caption.text}}</label>
+        <img ng-if="post.isInstagram" ng-src="{{post.instagram_imageURL}}">
+        <label ng-if="post.instagram_caption.text">{{post.instagram_caption.text}}</label>
         <!-- YouTube -->
-        <h4 ng-show="{{post.isYoutube}}" >{{post.youtube_title}}</h4>
-        <iframe ng-show="{{post.isYoutube}}" width="520" height="280" ng-src="{{trustSrc(post.youtube_videoURL)}}" frameborder="0" allowfullscreen></iframe>
+        <iframe ng-if="post.isYoutube" width="512" height="270" ng-src="{{trustSrc(post.youtube_videoURL)}}" frameborder="0" allowfullscreen></iframe>
+        <label ng-if="post.isYoutube" >{{post.youtube_title}}</label>
+        <!-- VK -->
+        <img ng-if="post.vk_attachment.type=='photo'" ng-src="{{post.vk_attachment.photo.src_big}}">
+        <label ng-if="post.vk_text" ng-bind-html="toTrusted(post.vk_text)"></label>
       </div>
   	</section>
     <section id="people">
+      <h4>You are following:</h4>
       <div ng-repeat="person in following track by $index">
         {{person.name}}
-        <i ng-click="select($index,'instagram')" ng-show="{{person.instagram!=null}}">instagram</i>
-        <i ng-click="select($index,'youtube')" ng-show="{{person.youtube!=null}}">youtube</i>
+        <i ng-click="select($index,'instagram')" ng-if="person.instagram!=null">instagram</i>
+        <i ng-click="select($index,'youtube')" ng-if="person.youtube!=null">youtube</i>
+        <i ng-click="select($index,'vk')" ng-if="person.vk!=null">vk</i>
       </div>
     </section>
     <section id="newPerson">
       <div>
-         <label for="inputName" class="control-label">New person to follow:</label>
+         <h4 for="inputName" class="control-label">New person to follow:</h4>
         <input type="text" ng-model="newFollowingName"  id="inputName" placeholder="Name" />
-        <input type="text" ng-model="newFollowingInstagram" placeholder="instagram.com/"/>
-        <input type="text" ng-model="newFollowingYoutube" placeholder="youtube.com/"/>
-        <button ng-click="addThisPerson()" type="button" >Follow</button>
+        <input type="text" ng-model="newFollowingInstagram" placeholder="instagram.com/..."/>
+        <input type="text" ng-model="newFollowingYoutube" placeholder="youtube.com/..."/>
+        <input type="text" ng-model="newFollowingVk" placeholder="vk.com/..."/>
+        <button ng-click="considerThisPerson()" type="button" >Follow</button>
       </div>
     </section>
   </body>

@@ -1,5 +1,7 @@
 Do not sign up — just follow
 ============================
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/Hermanya/follow.svg)](https://greenkeeper.io/)
 [This](http://hermanya.github.io/follow) is a **read-only** client for social networks, such as:
 * YouTube
 * Instagram
